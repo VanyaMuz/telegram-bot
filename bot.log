@@ -1,0 +1,5 @@
+2024-05-31 13:29:48,135 INFO Start polling
+2024-05-31 13:29:48,201 INFO Run polling for bot @Mbvanya1_bot id=5127738652 - 'test_bot'
+2024-05-31 13:34:49,459 INFO Polling stopped
+2024-05-31 13:34:50,022 INFO Polling stopped for bot @Mbvanya1_bot id=5127738652 - 'test_bot'
+2024-05-31 13:34:50,022 INFO Update id=543571455 is not handled. Duration 299170 ms by bot id=5127738652
