@@ -8,13 +8,13 @@ import asyncio
 
 
 import database.requests as  rq
-from database.requests import get_all_chats_names
+from database.requests import get_all_chats_names, get_chat_name_by_id
 import keyboards as kb
 
 router = Router()
 
-Chat_id_list = {5:'Запчасти Мари', 25: 'Пингвины', 32:'ЗАПЧАСТИ  УПР', 142: 'test' }
-
+Chat_id_list = {5:'Запчасти Мари', 25: 'Пингвины', 32:'ЗАПЧАСТИ  УПР'}#, 142: 'test' }
+link_names = {'@Иван', '@Иван Музыкантов'}
 @router.message(CommandStart())
 async def start(message: Message):
 
@@ -52,12 +52,17 @@ async def catalog(message: Message):
                         except:
                             print('error', 'contact name:', contact.ClientName, 'ccidnew:', ccID_new, 'ccidold:', ccID_old)
                             pass
-                elif event.ClientFlag in (0, 256):
+                elif event.ClientFlag in (0, 256, 33):
                     if ccID_new != ccID_old:
                         try:
                             contact = await rq.get_contact_name(event.ContactID)
-                            await message.answer(f"{'Личное сообщение от:' if event.ClientFlag == 0 else 'Изменено:'}  <b>{contact.Name if contact.Name != None else contact.ClientName}</b>\n {event.Body}", parse_mode = ParseMode.HTML)
-                            ccID_old = ccID_new
+                            chat_list_db = await get_chat_name_by_id(event.ChatID)
+                            if "Иван" in event.Body:
+                                await message.answer(f"Вас упомянули в: <b>{chat_list_db.Name}</b>\n<b>{contact.Name if contact.Name != None else contact.ClientName}</b>\n {event.Body}", parse_mode = ParseMode.HTML)
+                                ccID_old = ccID_new
+                            elif event.ClientFlag in (0, 256):
+                                await message.answer(f"{'Личное сообщение от:' if event.ClientFlag == 0 else 'Изменено:'}  <b>{contact.Name if contact.Name != None else contact.ClientName}</b>\n {event.Body}", parse_mode = ParseMode.HTML)
+                                ccID_old = ccID_new
                         except:
                             pass    
                 ccID_new +=1

@@ -24,6 +24,9 @@ async def get_all_chats_names():
     async with async_session() as session:
         return await session.scalars(select(ChatInfo).where(ChatInfo.Name != None))
 
+async def get_chat_name_by_id(chat_id):
+    async with async_session() as session:
+        return await session.scalar(select(ChatInfo).where(ChatInfo.ChatID == chat_id))
 
 # async def get_categories_items(category_id):
 #     async with async_session() as session:
